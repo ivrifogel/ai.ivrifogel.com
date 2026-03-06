@@ -37,7 +37,7 @@ export default async function ProductPage({
       <div className="mx-auto max-w-3xl">
         {/* Back link */}
         <Link
-          href="/"
+          href="/browse"
           className="mb-6 inline-flex items-center gap-1.5 text-sm text-gray-400 transition-colors hover:text-black"
         >
           <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

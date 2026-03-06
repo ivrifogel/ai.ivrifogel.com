@@ -1,6 +1,4 @@
 import type { Metadata } from 'next'
-import { Suspense } from 'react'
-import Sidebar from '@/components/Sidebar'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -25,14 +23,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-white text-foreground antialiased">
-        <div className="flex min-h-screen">
-          <Suspense>
-            <Sidebar />
-          </Suspense>
-          <main className="min-h-screen flex-1 lg:ml-[240px]">
-            {children}
-          </main>
-        </div>
+        {children}
       </body>
     </html>
   )

@@ -9,9 +9,9 @@ const navItems = [
     bgColor: '#f5f5f5',
     textColor: '#0a0a0a',
     links: [
-      { label: 'Browse All', href: '/#catalog' },
-      { label: 'Free Tools', href: '/#catalog' },
-      { label: 'Bundles', href: '/#catalog' },
+      { label: 'Browse All', href: '/browse' },
+      { label: 'Free Tools', href: '/browse?filter=free' },
+      { label: 'Bundles', href: '/browse?filter=bundle' },
     ],
   },
   {
@@ -59,11 +59,11 @@ export default function Navbar() {
         style={{ height: isOpen ? `${60 + contentHeight + 8}px` : '60px' }}
       >
         {/* Top bar */}
-        <div className="relative flex h-[60px] items-center justify-between px-3 pl-5">
-          {/* Hamburger */}
+        <div className="relative flex h-[60px] items-center justify-between px-5">
+          {/* Hamburger - centered vertically and horizontally in its box */}
           <button
             onClick={toggle}
-            className="relative flex h-10 w-8 flex-col items-center justify-center gap-[6px]"
+            className="flex h-10 w-10 flex-col items-center justify-center gap-[6px]"
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
           >
             <span
@@ -87,12 +87,12 @@ export default function Navbar() {
           </Link>
 
           {/* CTA button */}
-          <a
-            href="mailto:start@ivrifogel.com"
-            className="hidden rounded-lg bg-foreground px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-foreground/85 sm:block"
+          <Link
+            href="/browse"
+            className="rounded-lg bg-foreground px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-foreground/85"
           >
             Get Started
-          </a>
+          </Link>
         </div>
 
         {/* Expandable card content */}
