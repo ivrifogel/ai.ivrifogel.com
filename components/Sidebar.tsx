@@ -65,10 +65,15 @@ export default function Sidebar() {
     <div className="flex h-full flex-col p-4">
       {/* Logo */}
       <div className="mb-6">
-        <Link href="/" className="text-sm font-bold tracking-wide text-black">
+        <img
+          src="https://byyqqelacuorqpnxfhmv.supabase.co/storage/v1/object/public/ivrifogel.com/Signature.png"
+          alt="Ivri Fogel"
+          className="mb-3 w-3/5"
+        />
+        <Link href="/" className="text-2xl font-bold tracking-wide text-black">
           INF
         </Link>
-        <div className="text-[11px] text-gray-400">ai.ivrifogel.com</div>
+        <div className="text-[14px] uppercase tracking-[0.08em] text-gray-400">AI.IVRIFOGEL.COM</div>
       </div>
 
       {/* Search */}
