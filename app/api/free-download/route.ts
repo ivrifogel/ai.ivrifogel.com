@@ -29,23 +29,25 @@ export async function POST(req: NextRequest) {
     const siteUrl = getSiteUrl()
     const downloadUrl = `${siteUrl}/download/${token}`
 
-    // Save email subscriber
-    await supabaseAdmin
-      .from('email_subscribers')
-      .upsert({ email, source: product.slug }, { onConflict: 'email' })
-      .catch(() => {})
+    // Save email subscriber (non-blocking)
+    try {
+      await supabaseAdmin
+        .from('email_subscribers')
+        .upsert({ email, source: product.slug }, { onConflict: 'email' })
+    } catch {}
 
-    // Create purchase record
-    await supabaseAdmin
-      .from('purchases')
-      .insert({
-        product_id: product.id,
-        email,
-        amount_cents: 0,
-        status: 'completed',
-        download_token: token,
-      })
-      .catch(() => {})
+    // Create purchase record (non-blocking)
+    try {
+      await supabaseAdmin
+        .from('purchases')
+        .insert({
+          product_id: product.id,
+          email,
+          amount_cents: 0,
+          status: 'completed',
+          download_token: token,
+        })
+    } catch {}
 
     // Send email with download link
     try {

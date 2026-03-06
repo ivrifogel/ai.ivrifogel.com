@@ -49,12 +49,13 @@ export async function POST(req: NextRequest) {
       download_token: token,
     })
 
-    // Save email subscriber
+    // Save email subscriber (non-blocking)
     if (email) {
-      await supabaseAdmin
-        .from('email_subscribers')
-        .upsert({ email, source: `purchase-${productId}` }, { onConflict: 'email' })
-        .catch(() => {})
+      try {
+        await supabaseAdmin
+          .from('email_subscribers')
+          .upsert({ email, source: `purchase-${productId}` }, { onConflict: 'email' })
+      } catch {}
     }
 
     // Get product name for email

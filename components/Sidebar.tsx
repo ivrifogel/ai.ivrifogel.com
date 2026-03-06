@@ -70,10 +70,10 @@ export default function Sidebar() {
           alt="Ivri Fogel"
           className="mb-3 w-3/5"
         />
-        <Link href="/" className="text-2xl font-bold tracking-wide text-black">
+        <Link href="/" className="text-sm font-bold tracking-wide text-black">
           INF
         </Link>
-        <div className="text-[14px] uppercase tracking-[0.08em] text-gray-400">AI.IVRIFOGEL.COM</div>
+        <div className="text-[11px] text-gray-400">ai.ivrifogel.com</div>
       </div>
 
       {/* Search */}

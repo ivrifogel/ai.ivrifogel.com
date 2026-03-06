@@ -26,12 +26,13 @@ export async function POST(req: NextRequest) {
 
     const siteUrl = getSiteUrl()
 
-    // Save email subscriber if provided
+    // Save email subscriber if provided (non-blocking)
     if (email) {
-      await supabaseAdmin
-        .from('email_subscribers')
-        .upsert({ email, source: product.slug }, { onConflict: 'email' })
-        .catch(() => {}) // Non-blocking
+      try {
+        await supabaseAdmin
+          .from('email_subscribers')
+          .upsert({ email, source: product.slug }, { onConflict: 'email' })
+      } catch {}
     }
 
     const session = await stripe.checkout.sessions.create({
