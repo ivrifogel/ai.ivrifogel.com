@@ -1,8 +1,6 @@
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
 import EmailCapture from '@/components/EmailCapture'
 import BuyButton from '@/components/BuyButton'
-import ProductCard from '@/components/ProductCard'
 import CategoryIcon from '@/components/CategoryIcon'
 import { supabaseAdmin } from '@/lib/supabase'
 import { mockProducts } from '@/lib/mock-data'
@@ -20,19 +18,6 @@ async function getProduct(slug: string) {
   return mockProducts.find((p) => p.slug === slug) || null
 }
 
-async function getRelatedProducts(currentSlug: string) {
-  try {
-    const { data } = await supabaseAdmin
-      .from('products')
-      .select('*')
-      .eq('is_published', true)
-      .neq('slug', currentSlug)
-      .limit(3)
-    if (data && data.length > 0) return data
-  } catch {}
-  return mockProducts.filter((p) => p.slug !== currentSlug).slice(0, 3)
-}
-
 export default async function ProductPage({
   params,
 }: {
@@ -45,26 +30,14 @@ export default async function ProductPage({
     notFound()
   }
 
-  const related = await getRelatedProducts(slug)
   const price = product.price_cents === 0
     ? 'Free'
     : `$${(product.price_cents / 100).toFixed(product.price_cents % 100 === 0 ? 0 : 2)}`
 
   return (
     <div className="px-4 py-8 pt-16 sm:px-8 lg:pt-8">
-      <div className="mx-auto max-w-3xl">
-        {/* Back link */}
-        <Link
-          href="/browse"
-          className="mb-6 inline-flex items-center gap-1.5 text-sm text-gray-400 transition-colors hover:text-black"
-        >
-          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-          </svg>
-          Back to all products
-        </Link>
-
-        {/* Large thumbnail */}
+      <div className="mx-auto max-w-2xl">
+        {/* Hero image */}
         <div className="mb-8 aspect-[16/9] w-full overflow-hidden rounded-lg bg-gradient-to-br from-gray-50 to-gray-100">
           {product.thumbnail_url ? (
             <img
@@ -79,55 +52,80 @@ export default async function ProductPage({
           )}
         </div>
 
-        {/* Category */}
-        {product.category && (
-          <div className="mb-2 text-[11px] font-medium uppercase tracking-wide text-gray-400">
-            {product.category}
+        {/* Product label */}
+        <div className="mb-3 text-[11px] font-medium uppercase tracking-widest text-gray-400">
+          {product.name}
+        </div>
+
+        {/* Outcome-driven headline */}
+        <h1 className="text-3xl font-bold leading-tight text-black sm:text-4xl">
+          {product.short_desc}
+        </h1>
+
+        {/* Supporting copy */}
+        {product.description && (
+          <p className="mt-4 text-[16px] leading-relaxed text-gray-500">
+            {product.description}
+          </p>
+        )}
+
+        {/* CTA */}
+        <div className="mt-8">
+          {product.type === 'free' ? (
+            <EmailCapture
+              productId={product.id}
+              productSlug={product.slug}
+              ctaText="Get the Free Plugin"
+            />
+          ) : (
+            <div className="flex items-center gap-4">
+              <BuyButton productId={product.id} priceCents={product.price_cents} />
+              <span className="text-lg font-bold text-black">{price}</span>
+            </div>
+          )}
+          <p className="mt-2 text-[11px] text-gray-400">
+            No spam, ever. Unsubscribe anytime.
+          </p>
+        </div>
+
+        {/* Objection-handling bullets */}
+        {product.features && product.features.length > 0 && (
+          <div className="mt-10 space-y-4">
+            {product.features.map((feature: string, i: number) => (
+              <div key={i} className="flex items-start gap-3">
+                <svg
+                  className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="text-[15px] leading-snug text-gray-600">{feature}</span>
+              </div>
+            ))}
           </div>
         )}
 
-        {/* Title + Price + Buy row */}
-        <div className="mb-8 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-black">{product.name}</h1>
-            {price !== 'Free' && (
-              <div className="mt-2 text-2xl font-bold text-black">{price}</div>
-            )}
-          </div>
-
-          <div className="w-full sm:w-auto sm:min-w-[220px]">
-            {product.type === 'free' ? (
-              <EmailCapture productId={product.id} productSlug={product.slug} />
-            ) : (
-              <BuyButton productId={product.id} priceCents={product.price_cents} />
-            )}
+        {/* Social proof */}
+        <div className="mt-10 border-t border-gray-100 pt-8">
+          <div className="flex items-center gap-3">
+            <div className="flex -space-x-2">
+              {[...Array(4)].map((_, i) => (
+                <div
+                  key={i}
+                  className="h-8 w-8 rounded-full border-2 border-white bg-gradient-to-br from-gray-200 to-gray-300"
+                />
+              ))}
+            </div>
+            <p className="text-sm text-gray-500">
+              Joined by <span className="font-medium text-gray-700">500+</span> professionals
+            </p>
           </div>
         </div>
 
-        {/* Description */}
-        <div className="space-y-3 text-[15px] leading-[1.7] text-gray-600">
-          {product.description?.split('\n').map((line: string, i: number) => {
-            if (line.startsWith('## ')) {
-              return (
-                <h2 key={i} className="mt-6 text-lg font-semibold text-black">
-                  {line.replace('## ', '')}
-                </h2>
-              )
-            }
-            if (line.startsWith('- ')) {
-              return (
-                <div key={i} className="flex items-start gap-2.5">
-                  <span className="mt-2.5 block h-1 w-1 flex-shrink-0 rounded-full bg-gray-400" />
-                  <span>{line.replace('- ', '')}</span>
-                </div>
-              )
-            }
-            if (line.trim() === '') return null
-            return <p key={i}>{line}</p>
-          })}
-        </div>
-
-        {/* Demo */}
+        {/* Demo link */}
         {product.demo_url && (
           <div className="mt-6">
             <a
@@ -144,42 +142,15 @@ export default async function ProductPage({
           </div>
         )}
 
-        {/* Features */}
-        {product.features && product.features.length > 0 && (
-          <div className="mt-8 border-t border-border-subtle pt-8">
-            <h3 className="mb-4 text-lg font-semibold text-black">
-              What&apos;s included
-            </h3>
-            <div className="space-y-3">
-              {product.features.map((feature: string, i: number) => (
-                <div key={i} className="flex items-center gap-3">
-                  <svg
-                    className="h-4 w-4 flex-shrink-0 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm text-gray-600">{feature}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Related Products */}
-        {related.length > 0 && (
-          <div className="mt-12 border-t border-border-subtle pt-8">
-            <h3 className="mb-6 text-lg font-semibold text-black">More from the store</h3>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              {related.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Privacy / Terms footer */}
+        <div className="mt-12 border-t border-gray-100 pt-6">
+          <p className="text-[11px] text-gray-400">
+            By downloading, you agree to our{' '}
+            <a href="/privacy" className="underline hover:text-gray-600">Privacy Policy</a>
+            {' '}and{' '}
+            <a href="/terms" className="underline hover:text-gray-600">Terms of Service</a>.
+          </p>
+        </div>
       </div>
     </div>
   )

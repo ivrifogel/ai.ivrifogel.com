@@ -5,9 +5,10 @@ import { useState } from 'react'
 type EmailCaptureProps = {
   productId: string
   productSlug: string
+  ctaText?: string
 }
 
-export default function EmailCapture({ productId, productSlug }: EmailCaptureProps) {
+export default function EmailCapture({ productId, productSlug, ctaText }: EmailCaptureProps) {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
@@ -62,7 +63,7 @@ export default function EmailCapture({ productId, productSlug }: EmailCapturePro
         disabled={status === 'loading'}
         className="whitespace-nowrap rounded-md bg-black px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
       >
-        {status === 'loading' ? 'Sending...' : 'Download Free'}
+        {status === 'loading' ? 'Sending...' : (ctaText || 'Download Free')}
       </button>
       {status === 'error' && (
         <p className="col-span-full text-xs text-red-500">{errorMsg}</p>
