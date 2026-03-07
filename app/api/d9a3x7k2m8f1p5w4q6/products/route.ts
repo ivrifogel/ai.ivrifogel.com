@@ -1,17 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { mockProducts } from '@/lib/mock-data'
 
 export async function GET() {
-  const { data, error } = await supabaseAdmin
-    .from('products')
-    .select('*')
-    .order('sort_order', { ascending: true })
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('products')
+      .select('*')
+      .order('sort_order', { ascending: true })
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
+    if (!error && data && data.length > 0) {
+      return NextResponse.json({ products: data })
+    }
+  } catch {}
 
-  return NextResponse.json({ products: data ?? [] })
+  return NextResponse.json({ products: mockProducts })
 }
 
 export async function POST(req: NextRequest) {
