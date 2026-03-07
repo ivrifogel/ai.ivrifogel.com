@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { supabaseAdmin } from '@/lib/supabase'
+import { mockProducts } from '@/lib/mock-data'
 import ProductForm from '@/components/admin/ProductForm'
 
 export default async function EditProductPage({
@@ -9,11 +10,19 @@ export default async function EditProductPage({
 }) {
   const { id } = await params
 
-  const { data: product } = await supabaseAdmin
-    .from('products')
-    .select('*')
-    .eq('id', id)
-    .single()
+  let product = null
+  try {
+    const { data } = await supabaseAdmin
+      .from('products')
+      .select('*')
+      .eq('id', id)
+      .single()
+    if (data) product = data
+  } catch {}
+
+  if (!product) {
+    product = mockProducts.find((p) => p.id === id) || null
+  }
 
   if (!product) notFound()
 

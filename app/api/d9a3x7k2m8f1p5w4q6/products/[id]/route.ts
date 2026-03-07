@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { mockProducts } from '@/lib/mock-data'
 
 export async function GET(
   req: NextRequest,
@@ -7,17 +8,24 @@ export async function GET(
 ) {
   const { id } = await params
 
-  const { data, error } = await supabaseAdmin
-    .from('products')
-    .select('*')
-    .eq('id', id)
-    .single()
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('products')
+      .select('*')
+      .eq('id', id)
+      .single()
 
-  if (error || !data) {
-    return NextResponse.json({ error: 'Product not found' }, { status: 404 })
+    if (!error && data) {
+      return NextResponse.json({ product: data })
+    }
+  } catch {}
+
+  const mock = mockProducts.find((p) => p.id === id)
+  if (mock) {
+    return NextResponse.json({ product: mock })
   }
 
-  return NextResponse.json({ product: data })
+  return NextResponse.json({ error: 'Product not found' }, { status: 404 })
 }
 
 export async function PUT(
