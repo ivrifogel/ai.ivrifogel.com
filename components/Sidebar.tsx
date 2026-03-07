@@ -15,6 +15,7 @@ export default function Sidebar() {
   const router = useRouter()
 
   const currentFilter = searchParams.get('filter') || 'all'
+  const currentCategory = searchParams.get('category') || ''
 
   // Close drawer on route change
   useEffect(() => {
@@ -71,7 +72,7 @@ export default function Sidebar() {
         </div>
         <nav className="space-y-0.5">
           {browseItems.map((item) => {
-            const isActive = isBrowsePage && currentFilter === item.value
+            const isActive = isBrowsePage && !currentCategory && currentFilter === item.value
             return (
               <button
                 key={item.value}
@@ -97,7 +98,11 @@ export default function Sidebar() {
         <nav className="space-y-0.5">
           <button
             onClick={() => router.push('/browse?category=claude-plugins', { scroll: false })}
-            className="glow-orange w-full rounded-md px-3 py-1.5 text-left text-sm font-medium text-orange-500 transition-all duration-200 hover:bg-orange-50"
+            className={`w-full rounded-md px-3 py-1.5 text-left text-sm font-medium transition-all duration-200 ${
+              isBrowsePage && currentCategory === 'claude-plugins'
+                ? 'bg-orange-500 text-white shadow-[0_0_12px_rgba(249,115,22,0.4)]'
+                : 'glow-orange text-orange-500 hover:bg-orange-50'
+            }`}
           >
             Claude Plugins
           </button>
