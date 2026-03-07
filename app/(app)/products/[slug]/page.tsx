@@ -4,14 +4,32 @@ import EmailCapture from '@/components/EmailCapture'
 import BuyButton from '@/components/BuyButton'
 import ProductCard from '@/components/ProductCard'
 import CategoryIcon from '@/components/CategoryIcon'
+import { supabaseAdmin } from '@/lib/supabase'
 import { mockProducts } from '@/lib/mock-data'
 
-// TODO: Replace mock data with Supabase query
 async function getProduct(slug: string) {
+  try {
+    const { data } = await supabaseAdmin
+      .from('products')
+      .select('*')
+      .eq('slug', slug)
+      .eq('is_published', true)
+      .single()
+    if (data) return data
+  } catch {}
   return mockProducts.find((p) => p.slug === slug) || null
 }
 
-function getRelatedProducts(currentSlug: string) {
+async function getRelatedProducts(currentSlug: string) {
+  try {
+    const { data } = await supabaseAdmin
+      .from('products')
+      .select('*')
+      .eq('is_published', true)
+      .neq('slug', currentSlug)
+      .limit(3)
+    if (data && data.length > 0) return data
+  } catch {}
   return mockProducts.filter((p) => p.slug !== currentSlug).slice(0, 3)
 }
 
@@ -27,7 +45,7 @@ export default async function ProductPage({
     notFound()
   }
 
-  const related = getRelatedProducts(slug)
+  const related = await getRelatedProducts(slug)
   const price = product.price_cents === 0
     ? 'Free'
     : `$${(product.price_cents / 100).toFixed(product.price_cents % 100 === 0 ? 0 : 2)}`
@@ -72,7 +90,9 @@ export default async function ProductPage({
         <div className="mb-8 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h1 className="text-3xl font-bold text-black">{product.name}</h1>
-            <div className="mt-2 text-2xl font-bold text-black">{price}</div>
+            {price !== 'Free' && (
+              <div className="mt-2 text-2xl font-bold text-black">{price}</div>
+            )}
           </div>
 
           <div className="w-full sm:w-auto sm:min-w-[220px]">
@@ -86,7 +106,7 @@ export default async function ProductPage({
 
         {/* Description */}
         <div className="space-y-3 text-[15px] leading-[1.7] text-gray-600">
-          {product.description?.split('\n').map((line, i) => {
+          {product.description?.split('\n').map((line: string, i: number) => {
             if (line.startsWith('## ')) {
               return (
                 <h2 key={i} className="mt-6 text-lg font-semibold text-black">
@@ -131,7 +151,7 @@ export default async function ProductPage({
               What&apos;s included
             </h3>
             <div className="space-y-3">
-              {product.features.map((feature, i) => (
+              {product.features.map((feature: string, i: number) => (
                 <div key={i} className="flex items-center gap-3">
                   <svg
                     className="h-4 w-4 flex-shrink-0 text-gray-400"

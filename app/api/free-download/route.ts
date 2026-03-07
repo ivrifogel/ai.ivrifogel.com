@@ -18,8 +18,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid email address' }, { status: 400 })
     }
 
-    // TODO: Replace with Supabase query when connected
-    const product = mockProducts.find((p) => p.id === productId)
+    // Try Supabase first, fall back to mock data
+    let product = mockProducts.find((p) => p.id === productId) || null
+    try {
+      const { data } = await supabaseAdmin
+        .from('products')
+        .select('*')
+        .eq('id', productId)
+        .single()
+      if (data) product = data
+    } catch {}
 
     if (!product) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 })

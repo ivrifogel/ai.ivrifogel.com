@@ -1,4 +1,5 @@
 import ProductGrid from '@/components/ProductGrid'
+import { supabaseAdmin } from '@/lib/supabase'
 import { mockProducts } from '@/lib/mock-data'
 
 type SearchParams = Promise<{ filter?: string; category?: string }>
@@ -12,15 +13,26 @@ export default async function BrowsePage({
   const filter = params.filter || 'all'
   const category = params.category || ''
 
-  // TODO: Replace with Supabase query when connected
+  // Try Supabase first, fall back to mock data
   let products = mockProducts
+  try {
+    let query = supabaseAdmin
+      .from('products')
+      .select('*')
+      .eq('is_published', true)
+      .order('sort_order', { ascending: true })
 
-  if (filter !== 'all') {
-    products = products.filter((p) => p.type === filter)
-  }
+    if (filter !== 'all') {
+      query = query.eq('type', filter)
+    }
+    if (category) {
+      query = query.eq('category', category)
+    }
 
-  if (category) {
-    products = products.filter((p) => p.category === category)
+    const { data } = await query
+    if (data && data.length > 0) products = data
+  } catch {
+    // Fall back to mock data if Supabase is not connected
   }
 
   return (
