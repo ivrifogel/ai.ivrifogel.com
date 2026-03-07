@@ -118,7 +118,6 @@ export default function Sidebar() {
           <a href="mailto:start@ivrifogel.com" className="block text-xs text-gray-400 transition-colors hover:text-black">
             start@ivrifogel.com
           </a>
-          <span className="block text-xs text-gray-400">Bangkok</span>
           <a href="https://ivrifogel.com" target="_blank" rel="noopener noreferrer" className="block text-xs text-gray-400 transition-colors hover:text-black">
             ivrifogel.com
           </a>
