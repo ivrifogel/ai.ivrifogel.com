@@ -6,6 +6,7 @@ import { ADMIN_SLUG } from '@/lib/admin-config'
 type Subscriber = {
   id: string
   email: string
+  first_name: string | null
   source: string | null
   subscribed_at: string
   is_active: boolean
@@ -64,6 +65,7 @@ export default function SubscriberTable({ initial }: { initial: SubscriberRespon
         <table className="w-full text-left text-sm">
           <thead className="border-b border-gray-200 bg-gray-50">
             <tr>
+              <th className="px-4 py-3 font-medium text-gray-500">Name</th>
               <th className="px-4 py-3 font-medium text-gray-500">Email</th>
               <th className="px-4 py-3 font-medium text-gray-500">Source</th>
               <th className="px-4 py-3 font-medium text-gray-500">Date</th>
@@ -73,13 +75,14 @@ export default function SubscriberTable({ initial }: { initial: SubscriberRespon
           <tbody className={loading ? 'opacity-50' : ''}>
             {data.subscribers.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-gray-400">
+                <td colSpan={5} className="px-4 py-8 text-center text-gray-400">
                   No subscribers found
                 </td>
               </tr>
             ) : (
               data.subscribers.map((sub) => (
                 <tr key={sub.id} className="border-b border-gray-100 last:border-0">
+                  <td className="px-4 py-3 text-black">{sub.first_name ?? '—'}</td>
                   <td className="px-4 py-3 font-medium text-black">{sub.email}</td>
                   <td className="px-4 py-3 text-gray-500">{sub.source ?? '—'}</td>
                   <td className="px-4 py-3 text-gray-500">

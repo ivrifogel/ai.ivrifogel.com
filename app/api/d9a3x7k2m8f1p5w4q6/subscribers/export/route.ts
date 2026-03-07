@@ -4,7 +4,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 export async function GET() {
   const { data, error } = await supabaseAdmin
     .from('email_subscribers')
-    .select('email, source, subscribed_at, is_active')
+    .select('first_name, email, source, subscribed_at, is_active')
     .eq('is_active', true)
     .order('subscribed_at', { ascending: false })
 
@@ -13,9 +13,10 @@ export async function GET() {
   }
 
   const csv = [
-    'email,source,subscribed_at,is_active',
+    'first_name,email,source,subscribed_at,is_active',
     ...(data ?? []).map(
-      (s) => `${s.email},${s.source ?? ''},${s.subscribed_at},${s.is_active}`
+      (s: { first_name: string | null; email: string; source: string | null; subscribed_at: string; is_active: boolean }) =>
+        `${s.first_name ?? ''},${s.email},${s.source ?? ''},${s.subscribed_at},${s.is_active}`
     ),
   ].join('\n')
 
