@@ -64,9 +64,27 @@ export default async function ProductPage({
 
         {/* Supporting copy */}
         {product.description && (
-          <p className="mt-4 text-[16px] leading-relaxed text-gray-500">
-            {product.description}
-          </p>
+          <div className="mt-4 space-y-3 text-[16px] leading-relaxed text-gray-500">
+            {product.description.split('\n').map((line: string, i: number) => {
+              if (line.startsWith('## ')) {
+                return (
+                  <h2 key={i} className="mt-6 text-lg font-semibold text-black">
+                    {line.replace('## ', '')}
+                  </h2>
+                )
+              }
+              if (line.startsWith('- ')) {
+                return (
+                  <div key={i} className="flex items-start gap-2.5">
+                    <span className="mt-2.5 block h-1 w-1 flex-shrink-0 rounded-full bg-gray-400" />
+                    <span>{line.replace('- ', '')}</span>
+                  </div>
+                )
+              }
+              if (line.trim() === '') return null
+              return <p key={i}>{line}</p>
+            })}
+          </div>
         )}
 
         {/* CTA */}
