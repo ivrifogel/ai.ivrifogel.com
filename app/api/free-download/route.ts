@@ -27,7 +27,11 @@ export async function POST(req: NextRequest) {
 
     const token = generateToken()
     const siteUrl = getSiteUrl()
-    const downloadUrl = `${siteUrl}/download/${token}`
+
+    // If the product has a direct public URL, use it directly
+    const downloadUrl = product.file_path?.startsWith('http')
+      ? product.file_path
+      : `${siteUrl}/download/${token}`
 
     // Save email subscriber (non-blocking)
     try {
