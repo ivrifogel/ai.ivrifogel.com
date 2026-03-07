@@ -5,7 +5,7 @@ export const mockProducts: Product[] = [
     id: '7',
     name: 'AI Meeting Report',
     slug: 'ai-meeting-report',
-    description: 'Stop wasting hours writing meeting notes by hand. This Claude plugin records, transcribes, and summarizes your meetings into professional PDF reports — ready to share in minutes, not hours.',
+    description: 'Stop wasting hours writing meeting notes by hand. This Claude plugin records, transcribes, and summarizes your meetings into professional PDF reports — ready to share in minutes, not hours.\n\n## How It Works\n\n- Upload or paste your meeting transcript (Zoom, Google Meet, Teams, or any recording)\n- AI analyzes the conversation — identifying speakers, key decisions, and next steps\n- Get a polished PDF report with action items, summaries, and speaker attribution\n\n## What You Get\n\n- A ready-to-install Claude plugin (.zip)\n- Works with any meeting format or language\n- Outputs clean, share-ready PDF reports\n- Extracts action items with owner and deadline\n- Highlights key decisions and discussion points',
     short_desc: 'Turn Any Meeting Into a Structured Report — Automatically',
     price_cents: 0,
     type: 'free',

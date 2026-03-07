@@ -164,11 +164,14 @@ export default function ProductForm({ product }: { product?: ProductData }) {
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-500">Price (cents)</label>
+          <label className="mb-1 block text-xs font-medium text-gray-500">Price ($)</label>
           <input
             type="number"
-            value={form.price_cents}
-            onChange={(e) => updateField('price_cents', parseInt(e.target.value) || 0)}
+            step="0.01"
+            min="0"
+            value={(form.price_cents / 100).toFixed(2)}
+            onChange={(e) => updateField('price_cents', Math.round(parseFloat(e.target.value || '0') * 100))}
+            placeholder="0.00"
             className={inputClass}
           />
         </div>
