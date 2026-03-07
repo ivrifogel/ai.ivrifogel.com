@@ -6,17 +6,6 @@ import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 
 const browseItems = [
   { label: 'All Products', value: 'all' },
-  { label: 'Free', value: 'free' },
-  { label: 'Paid', value: 'paid' },
-  { label: 'Bundles', value: 'bundle' },
-  { label: 'Premium', value: 'premium' },
-]
-
-const categoryItems = [
-  { label: 'Toolkits', value: 'toolkit' },
-  { label: 'Templates', value: 'template' },
-  { label: 'Courses', value: 'course' },
-  { label: 'Generators', value: 'generator' },
 ]
 
 export default function Sidebar() {
@@ -26,7 +15,6 @@ export default function Sidebar() {
   const router = useRouter()
 
   const currentFilter = searchParams.get('filter') || 'all'
-  const currentCategory = searchParams.get('category') || ''
 
   // Close drawer on route change
   useEffect(() => {
@@ -46,16 +34,6 @@ export default function Sidebar() {
   function handleFilterClick(value: string) {
     const params = new URLSearchParams()
     if (value !== 'all') params.set('filter', value)
-    router.push(`/browse${params.toString() ? '?' + params.toString() : ''}`, { scroll: false })
-  }
-
-  function handleCategoryClick(value: string) {
-    const params = new URLSearchParams()
-    if (isBrowsePage && currentCategory === value) {
-      // Toggle off
-    } else {
-      params.set('category', value)
-    }
     router.push(`/browse${params.toString() ? '?' + params.toString() : ''}`, { scroll: false })
   }
 
@@ -93,7 +71,7 @@ export default function Sidebar() {
         </div>
         <nav className="space-y-0.5">
           {browseItems.map((item) => {
-            const isActive = isBrowsePage && !currentCategory && currentFilter === item.value
+            const isActive = isBrowsePage && currentFilter === item.value
             return (
               <button
                 key={item.value}
@@ -117,22 +95,12 @@ export default function Sidebar() {
           Categories
         </div>
         <nav className="space-y-0.5">
-          {categoryItems.map((item) => {
-            const isActive = isBrowsePage && currentCategory === item.value
-            return (
-              <button
-                key={item.value}
-                onClick={() => handleCategoryClick(item.value)}
-                className={`w-full rounded-md px-3 py-1.5 text-left text-sm transition-colors duration-100 ${
-                  isActive
-                    ? 'bg-black font-medium text-white'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                {item.label}
-              </button>
-            )
-          })}
+          <button
+            onClick={() => router.push('/browse?category=claude-plugins', { scroll: false })}
+            className="glow-orange w-full rounded-md px-3 py-1.5 text-left text-sm font-medium text-orange-500 transition-all duration-200 hover:bg-orange-50"
+          >
+            Claude Plugins
+          </button>
         </nav>
       </div>
 

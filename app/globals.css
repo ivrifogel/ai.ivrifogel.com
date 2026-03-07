@@ -43,6 +43,20 @@ body {
   animation: cardFadeIn 0.2s ease-out forwards;
 }
 
+/* Orange glow pulse for Claude Plugins */
+@keyframes orangeGlow {
+  0%, 100% {
+    text-shadow: 0 0 6px rgba(249, 115, 22, 0.4), 0 0 12px rgba(249, 115, 22, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 10px rgba(249, 115, 22, 0.6), 0 0 20px rgba(249, 115, 22, 0.3);
+  }
+}
+
+.glow-orange {
+  animation: orangeGlow 2s ease-in-out infinite;
+}
+
 /* Mobile sidebar backdrop */
 .sidebar-backdrop {
   background-color: rgba(0, 0, 0, 0.4);
