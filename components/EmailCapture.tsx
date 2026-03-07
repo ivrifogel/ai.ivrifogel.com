@@ -48,7 +48,7 @@ export default function EmailCapture({ productId, productSlug }: EmailCapturePro
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row">
       <input
         type="email"
         value={email}

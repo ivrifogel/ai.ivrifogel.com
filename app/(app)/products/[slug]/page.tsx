@@ -33,7 +33,7 @@ export default async function ProductPage({
     : `$${(product.price_cents / 100).toFixed(product.price_cents % 100 === 0 ? 0 : 2)}`
 
   return (
-    <div className="px-8 py-8">
+    <div className="px-4 py-8 pt-16 sm:px-8 lg:pt-8">
       <div className="mx-auto max-w-3xl">
         {/* Back link */}
         <Link

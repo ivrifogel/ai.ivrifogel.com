@@ -26,7 +26,7 @@ export default async function BrowsePage({
   return (
     <>
       {/* Top bar */}
-      <div className="sticky top-0 z-10 border-b border-border-subtle bg-white px-8 py-6">
+      <div className="sticky top-0 z-10 border-b border-border-subtle bg-white px-4 py-6 pt-16 sm:px-8 lg:pt-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-black">Browse Tools</h1>
@@ -41,7 +41,7 @@ export default async function BrowsePage({
       </div>
 
       {/* Product grid */}
-      <div className="px-8 py-6">
+      <div className="px-4 py-6 sm:px-8">
         <ProductGrid products={products} />
       </div>
     </>
